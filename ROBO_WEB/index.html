@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <title>Low Light Studio</title>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+ </head>
+ <body>
+
+  <div id="cursor"></div>
+  <div class="noise-overlay"></div>
+
+  <video autoplay class="bg-video" id="mainVideo" loop muted playsinline>
+    <source src="video/lumio-reel.mp4" type="video/mp4">
+  </video>
+
+  <div id="viewport">
+    <div id="chassis">
+        <div class="main-title">
+            <span class="letter-mask"><span class="letter">L</span></span><span class="letter-mask"><span class="letter">O</span></span><span class="letter-mask"><span class="letter">W</span></span><span class="letter-mask"><span class="letter">&nbsp;</span></span><span class="letter-mask"><span class="letter">L</span></span><span class="letter-mask"><span class="letter">I</span></span><span class="letter-mask"><span class="letter">G</span></span><span class="letter-mask"><span class="letter">H</span></span><span class="letter-mask"><span class="letter">T</span></span><span class="letter-mask"><span class="letter">&nbsp;</span></span><span class="letter-mask"><span class="letter">S</span></span><span class="letter-mask"><span class="letter">T</span></span><span class="letter-mask"><span class="letter">U</span></span><span class="letter-mask"><span class="letter">D</span></span><span class="letter-mask"><span class="letter">I</span></span><span class="letter-mask"><span class="letter">O</span></span>
+        </div>
+    </div>
+  </div>
+
+  <div class="ui-overlay">
+    <div class="nav-top">
+        <span>Studio</span> <span>Works</span> <span>Lab</span>
+        <a href="#" class="btn-hello">Hello ↗</a>
+    </div>
+
+    <div class="bottom-section">
+        <div class="bottom-left">
+            <p>Crafting light and digital experiences with intention and precision.</p>
+            <a href="#" class="btn-work">Our Work +</a>
+            <div class="social-links">
+                <span>INSTAGRAM</span> <span>TWITTER</span> <span>LINKEDIN</span>
+            </div>
+        </div>
+
+        <div class="bottom-right">
+            <div class="clock-box">
+                <div class="clock-label">WYOMING, USA</div>
+                <div class="clock-time" id="clock-wyoming"></div>
+                <div class="clock-label">MST</div>
+            </div>
+            <div class="clock-box">
+                <div class="clock-label">LAGOS, NG</div>
+                <div class="clock-time" id="clock-lagos"></div>
+                <div class="clock-label">WAT</div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const chassis = document.getElementById('chassis');
+    const cursor = document.getElementById('cursor');
+    const clockWyoming = document.getElementById('clock-wyoming');
+    const clockLagos = document.getElementById('clock-lagos');
+
+    /* --- 3D Parallax + Custom Cursor --- */
+    document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.pageX) / 100;
+        const y = (window.innerHeight / 2 - e.pageY) / 100;
+        chassis.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('click', () => { document.getElementById('mainVideo').play(); }, { once: true });
+
+    /* --- Live Clocks --- */
+    function formatTime(date) {
+        let h = date.getHours();
+        const m = String(date.getMinutes()).padStart(2, '0');
+        const period = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        return `${h}:${m} ${period}`;
+    }
+
+    function updateClocks() {
+        const now = new Date();
+        const wyoming = new Date(now.toLocaleString('en-US', { timeZone: 'America/Denver' }));
+        const lagos = new Date(now.toLocaleString('en-US', { timeZone: 'Africa/Lagos' }));
+        clockWyoming.textContent = formatTime(wyoming);
+        clockLagos.textContent = formatTime(lagos);
+    }
+
+    updateClocks();
+    setInterval(updateClocks, 1000);
+
+    /* --- GSAP Letter Reveal --- */
+    gsap.to('.letter', {
+        y: 0,
+        duration: 1.2,
+        ease: 'power4.out',
+        stagger: 0.05,
+        delay: 0.3
+    });
+  </script>
+ </body>
+</html>
